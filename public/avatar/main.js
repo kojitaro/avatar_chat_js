@@ -60,40 +60,84 @@ var ChatAvatar = enchant.Class.create(enchant.Avatar, {
 var GameWorld = enchant.Class.create({
 	initialize:function()
 	{
-	}
+		this.id = -1;
+		this.characters = {};
+	},
+
+	start:function()
+	{
+		var self = this;
+
+		// 背景
+		game.rootScene.backgroundColor="#000000";
+		var bg =new AvatarBG(1);
+		bg.y=50;
+		game.rootScene.addChild(bg);
+
+		// キャラクター
+		var chara = new ChatAvatar("2:2:1:2004:21230:22480", Math.floor(Math.random() * 320), Math.floor(Math.random() * 320));
+		game.rootScene.addChild(chara);
+		game.rootScene.addEventListener('touchstart',
+			function(e){
+				chara.move(e.x, e.y);
+				self.send_position(e.x, e.y)
+			});
+
+
+		this.socket = io.connect('');
+		var socket = this.socket;
+		socket.on('connect', function() { 
+			log('connected');
+			socket.emit('init', chara.getCode(), chara.x, chara.y);
+
+			socket.on('ready', function (id) {
+				// 
+				log("ready " + id);
+				this.id = id;
+			});
+			socket.on('new character', function (character) {
+				log("new charactere");
+				//log(character);
+				self.add_character(character);
+			});
+			socket.on('msg push', function (id, msg) {
+				log("" + id + ": " + msg);
+			});
+			socket.on('position push', function (id, x, y) {
+				// log("position push" + id + ": " + x + "," + y);
+				self.update_position(id, x, y);
+			});
+		});
+	},
+	send_message: function(text){
+		this.socket.emit('msg send', text); 
+	},
+	send_position: function(x,y){
+		this.socket.emit('position send', x, y); 
+	},
+
+	add_character: function(ch){
+		this.characters[ch.id] = ch;
+
+		var chara = new ChatAvatar(ch.code, ch.x, ch.y);
+		ch.avatar = chara;
+		game.rootScene.addChild(chara);
+	},
+	update_position: function(id, x, y){
+		var chara = this.characters[id];
+		if( chara ){
+			chara.avatar.move(x, y);
+		}
+	},
 });
 var world = new GameWorld();
 
-var socket = io.connect('');
-socket.on('connect', function() { 
-	log('connected');
-	socket.emit('msg send', 'data');
-	socket.on('msg push', function (msg) {
-    log(msg);
-  });
-});
-
-function send_message(text){
-  socket.emit('msg send', text); 
-}
 
 window.onload=function(){
 	game = new Game(320,320);
 	game.preload('avatarBg1.png','avatarBg2.png','avatarBg3.png');
 	game.onload=function(){
-
-		game.rootScene.backgroundColor="#000000";
-		var bg =new AvatarBG(1);
-		bg.y=50;
-		game.rootScene.addChild(bg);
-		
-		var chara = new ChatAvatar("2:2:1:2004:21230:22480", 50, 100);
-		game.rootScene.addChild(chara);
-		game.rootScene.addEventListener('touchstart',
-			function(e){
-				chara.move(e.x, e.y);
-			});
+		world.start();
 	}
-
 	game.start();
 }

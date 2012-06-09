@@ -17,5 +17,5 @@ function gameFrame_init()
 
 function send_message(){
   var text = document.getElementById("text").value;
-  gameFrame.send_message(text);
+  gameFrame.world.send_message(text);
 }
