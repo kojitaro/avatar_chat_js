@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <title>enchant</title>
+        <script type="text/javascript" src="index.js"></script>
+        <style type="text/css">
+            body {
+                margin: 0;
+            }
+        </style>
+    </head>
+    <body>
+		<div style="float:left;">
+		<iframe id="gameFrame" scrolling="no"
+			onload="gameFrame_init();" style="background-color:white;
+			width:320px; height:320px;" src="game.html"></iframe>
+		</div>
+
+		<div>
+		<input type="text" id="text" size=20></input>
+		<button  onclick=javascript:send_message() >message</button>
+		<div id="log"></div>
+		</div>
+    </body>
+</html>
