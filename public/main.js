@@ -130,12 +130,12 @@ var GameWorld = enchant.Class.create({
 		this.socket = io.connect('');
 		var socket = this.socket;
 		socket.on('connect', function() { 
-			log('connected');
+			//log('connected');
 			socket.emit('init', chara.getCode(), chara.scene.x, chara.scene.y);
 
 			socket.on('ready', function (id) {
 				// 
-				log("ready " + id);
+				//log("ready " + id);
 				this.id = id;
 				game.rootScene.addEventListener('touchstart',
 					function(e){
@@ -145,11 +145,11 @@ var GameWorld = enchant.Class.create({
 				game.rootScene.removeChild(label);
 			});
 			socket.on('new character', function (character) {
-				log("new character");
+				//log("new character");
 				self.add_character(character);
 			});
 			socket.on('msg push', function (id, msg) {
-				log("" + id + ": " + msg);
+				//log("" + id + ": " + msg);
 				self.update_message(id, msg);
 			});
 			socket.on('position push', function (id, x, y) {
@@ -157,7 +157,7 @@ var GameWorld = enchant.Class.create({
 				self.update_position(id, x, y);
 			});
 			socket.on('delete character', function (id) {
-				log("delete character");
+				//log("delete character");
 				self.remove_character(id);
 			});
 		});
@@ -173,7 +173,7 @@ var GameWorld = enchant.Class.create({
 	add_character: function(ch){
 		this.characters[ch.id] = ch;
 
-		log("x="+ch.x+ " y=" +  ch.y);
+		//log("x="+ch.x+ " y=" +  ch.y);
 
 		var chara = new ChatAvatar(ch.code, ch.x, ch.y);
 		ch.avatar = chara;
@@ -182,7 +182,9 @@ var GameWorld = enchant.Class.create({
 	remove_character: function(id){
 		var chara = this.characters[id];
 		if( chara ){
-			game.rootScene.removeChild(chara.scene);
+		//log("remove_character="+id);
+			game.rootScene.removeChild(chara.avatar.scene);
+			delete this.characters[id];
 		}
 	},
 	update_position: function(id, x, y){
