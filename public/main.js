@@ -116,13 +116,15 @@ var GameWorld = enchant.Class.create({
 		var y = Math.floor(Math.random() * 320);
 		var chara = new ChatAvatar(random_code(), x, y);
 		this.player = chara;
-
 		game.rootScene.addChild(this.player.scene);
-		game.rootScene.addEventListener('touchstart',
-			function(e){
-				chara.move(e.x, e.y);
-				self.send_position(e.x, e.y)
-			});
+
+		
+		var label = new Label();
+		label.text = "Now Loading!";
+		label.x = 100;
+		label.y = 160;
+		game.rootScene.addChild(label);
+
 
 
 		this.socket = io.connect('');
@@ -135,6 +137,12 @@ var GameWorld = enchant.Class.create({
 				// 
 				log("ready " + id);
 				this.id = id;
+				game.rootScene.addEventListener('touchstart',
+					function(e){
+						self.player.move(e.x, e.y);
+						self.send_position(e.x, e.y)
+					});
+				game.rootScene.removeChild(label);
 			});
 			socket.on('new character', function (character) {
 				log("new character");
