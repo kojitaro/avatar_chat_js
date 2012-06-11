@@ -1,10 +1,12 @@
 {
     "name": "avatar_chat_js"
   , "version": "0.0.1"
-  , "private": true
   , "dependencies": {
-      "express": "2.4.6"
+      "express": "2.5.9"
     , "ejs": ">= 0.0.1"
 	, "socket.io": "0.9.6"
+  }
+  , "engines": {
+  	"node": "0.6.17"
   }
 }
