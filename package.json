@@ -1,9 +1,10 @@
 {
-    "name": "application-name"
+    "name": "avatar_chat_js"
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {
       "express": "2.4.6"
     , "ejs": ">= 0.0.1"
+	, "socket.io": "0.9.6"
   }
 }
