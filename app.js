@@ -61,21 +61,27 @@ io.sockets.on('connection', function (socket) {
 	});
 	socket.on('msg send', function (msg) {
 		socket.get('character', function (err, ch) {
-			socket.broadcast.emit('msg push', ch.id, msg);
+			if( ch ){
+				socket.broadcast.emit('msg push', ch.id, msg);
+			}
 		});
 	});
 	socket.on('position send', function (x, y) {
 		socket.get('character', function (err, ch) {
-			socket.broadcast.emit('position push', ch.id, x, y);
-			characters[ch.id].x = x;
-			characters[ch.id].y = y;
+			if( ch ){
+				socket.broadcast.emit('position push', ch.id, x, y);
+				characters[ch.id].x = x;
+				characters[ch.id].y = y;
+			}
 		});
 	});
 	socket.on('disconnect', function() {
 		log('disconnected');
 		socket.get('character', function (err, ch) {
-			socket.broadcast.emit('delete character', ch.id);
-			delete characters[ch.id];
+			if( ch ){
+				socket.broadcast.emit('delete character', ch.id);
+				delete characters[ch.id];
+			}
 		});
 	});
 });

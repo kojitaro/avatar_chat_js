@@ -78,7 +78,7 @@ var ChatAvatar = enchant.Class.create(enchant.Avatar, {
 		this.scene.addChild(label);
 
 		this.message_label = label;
-		this.message_counter = 20;
+		this.message_counter = 60;
 
 	},
 });
@@ -163,6 +163,8 @@ var GameWorld = enchant.Class.create({
 		});
 	},
 	send_message: function(text){
+		if( this.player.message_label )return;
+
 		this.socket.emit('msg send', text); 
 		this.player.showMessage(text);
 	},
