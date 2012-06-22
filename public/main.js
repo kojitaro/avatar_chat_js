@@ -71,6 +71,10 @@ var ChatAvatar = enchant.Class.create(enchant.Avatar, {
 	},
 	showMessage: function(message)
 	{
+		if( this.message_label ){
+			this.scene.removeChild(this.message_label);
+			this.message_label = null;
+		}
 		var label = new Label();
 		label.text = message;
 		label.x = -20;
